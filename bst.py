@@ -38,28 +38,30 @@ class BinarySearchTree:
 		"""
 		O(logN)
 		"""
-		root = self.__search(root, element)
-		
 		if root == None:
-			Exception("Node {0} does not exist".format(element))
-			return
+			return None		
 
-		# Element exists
-		if root.right == None:
-			return root.left
-	
-		elif root.left == None:
-			return root.right
-	
+		if root.val > element:
+			root.right = self.__delete(root.right, element)
+		
+		elif root.val < element:
+			root.left =  self.__delete(root.left, element)
+
 		else:
+			# Element exists
+			if root.right == None:
+				return root.left
+
+			elif root.left == None:
+				return root.right
+
+			# we have both children
 			temp = root.right
-			mini = temp.val
 			while temp.left != None:
 				temp = temp.left
-				mini = temp.val
-			root.val = mini
+			root.val = temp.val
 			print "Deleting element {0}".format(element)
-			root.right = self.__delete(root.right, mini)
+			root.right = self.__delete(root.right, root.val)
 		return root
 				
 	
@@ -170,6 +172,25 @@ class BinarySearchTree:
        			return result
 		print __levelorder(self.root)
 
+	def depth_first_traversal(self):
+		"""
+		O(N)
+		"""
+		def __depthfirst(root, path):
+			if root == None:
+				return
+			path.append(root.val)
+			if root.left == root.right == None:
+				print path
+				path.pop()
+			else:
+				__depthfirst(root.left, path)
+				__depthfirst(root.right, path)
+		
+		path = []
+		__depthfirst(self.root, path)
+				
+	
 	def get_depth(self, node):
 		"""
 		O(N) because traversal of both left 
@@ -253,3 +274,4 @@ print bst.validateBST()
 bst.invert()
 print bst.inorder()
 print bst.levelorder()
+print bst.depth_first_traversal()
